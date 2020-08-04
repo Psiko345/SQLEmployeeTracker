@@ -12,7 +12,7 @@ CREATE TABLE employees_tb (
     manager_id INT, 
     PRIMARY KEY (id),
     FOREIGN KEY (role_id) REFERENCES role_tb(id),
-    FOREIGN KEY (manager_id),
+    FOREIGN KEY (manager_id) REFERENCES role_tb(id),
 );
 
 CREATE TABLE role_tb (
@@ -29,3 +29,4 @@ CREATE TABLE dept_db (
     name VARCHAR(30),
     PRIMARY KEY (id)
 )
+
