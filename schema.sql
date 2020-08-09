@@ -4,7 +4,7 @@ CREATE DATABASE company_db;
 
 USE company_db;
 
-CREATE TABLE employees_tb (
+CREATE TABLE employees (
     id INT AUTO_INCREMENT  Not NULL 
     first_name VARCHAR(30),
     last_name VARCHAR (30),
@@ -15,7 +15,7 @@ CREATE TABLE employees_tb (
     FOREIGN KEY (manager_id) REFERENCES role_tb(id),
 );
 
-CREATE TABLE role_tb (
+CREATE TABLE roles (
     id INT AUTO_INCREMENT NOT NULL,
     title VARCHAR(30),
     salary DECIMAL,
@@ -24,7 +24,7 @@ CREATE TABLE role_tb (
     FOREIGN KEY (dept_id) REFERENCES (dept_db)
 );
 
-CREATE TABLE dept_db (
+CREATE TABLE departments (
     id INT AUTO_INCREMENT NOT NULL,
     name VARCHAR(30),
     PRIMARY KEY (id)
