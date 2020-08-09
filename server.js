@@ -18,91 +18,38 @@ const connection = mysql.createConnection({
 
 connection.connect(function (err) {
   if (err) throw err;
-  runSearch();
+  runApp();
 });
 
-function whatWouldYouLikeToDo() {
-  inquirer
-    .prompt({
-      name: "action",
-      type: "rawlist",
-      message: "What would you like to do?",
-      choices: [
-        "View all employees",
-        "View all roles",
-        "View all departments",
-        "View employees by deparment",
-        "View employees by role",
-        "Add an employee",
-        "Add a role",
-        "Add a department",
-        "Remove an employee",
-        "Remove a role",
-        "Remove a department",
-        "Update employee role",
-        "Update employee manager",
-        "Update employee department",
-      ],
-    })
-    .then(function (answer) {
-      switch (answer.action) {
-        case "View all employees":
-          viewAllEmployees();
-          break;
+function runApp() {
+  prompt({
+    type: "list",
+    name: "Action",
+    message: "What action do you wish to perfom?",
+    choices: ["View", "Add", "Update", "Delete", "Exit"],
+  }).then((answer) => {
+    switch (answer.Action) {
+      case "View":
+        view();
+        break;
 
-        case "View all Roles":
-          viewAllRoles();
-          break;
+      case "Add":
+        add();
+        break;
 
-        case "View all departments":
-          viewAllDepartments();
-          break;
+      case "Update":
+        update();
+        break;
 
-        case "View employees by deparment":
-          viewAllEmployeesByDepartment();
-          break;
+      case "Delete":
+        expunge();
+        break;
 
-        case "View employees by role":
-          viewAllEmployeesByRole();
-          break;
-
-        case "Add an employee":
-          addEmployee();
-          break;
-
-        case "Add a role":
-          addARole();
-          break;
-
-        case "Add a Department":
-          addADepartment();
-          break;
-
-        case "Remove an employee":
-          removeAnEmployee();
-          break;
-
-        case "Remove a Role":
-          removeARole();
-          break;
-
-        case "Remove a Department":
-          removeADepartment();
-          break;
-
-        case "Update employee role":
-          updateEmployeeRole();
-          break;
-
-        case "Update employee manager":
-          updateEmployeeManager();
-          break;
-
-        case "Update employee Department":
-          updateEmployeeDepartment();
-          break;
-      }
-    });
+      case "Exit":
+        exit();
+        break;
+    }
+  });
 }
 
-whatWouldYouLikeToDo();
+// 4 functions (view, add, update, delete) leading to sub-functions (employee, role, manager, department)
