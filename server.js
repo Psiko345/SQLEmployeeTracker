@@ -5,51 +5,197 @@ const cTable = require("console.table");
 const connection = mysql.createConnection({
   host: "localhost",
 
-  // Your port; if not 3306
   port: 3306,
 
-  // Your username
   user: "root",
 
-  // Your password
   password: "CuambaNiassa1",
   database: "company_db",
 });
 
-connection.connect(function (err) {
-  if (err) throw err;
-  runApp();
-});
+// connection.connect(function (err) {
+//   if (err) throw err;
+//   runApp();
+// });
 
-function runApp() {
-  prompt({
-    type: "list",
-    name: "Action",
-    message: "What action do you wish to perfom?",
-    choices: ["View", "Add", "Update", "Delete", "Exit"],
-  }).then((answer) => {
+async function runApp() {
+  console.log("connecting to db...");
+  connection.connect();
+  console.log("connected to db");
+  while (true) {
+    let answer = await inquirer.prompt({
+      type: "list",
+      name: "Action",
+      message: "What action do you wish to perfom?",
+      choices: ["View", "Add", "Update", "Delete", "Exit"],
+    });
     switch (answer.Action) {
       case "View":
-        view();
-        break;
+        await view();
+        continue;
 
       case "Add":
-        add();
-        break;
+        await add();
+        continue;
 
       case "Update":
-        update();
-        break;
+        await update();
+        continue;
 
       case "Delete":
-        expunge();
-        break;
+        await remove();
+        continue;
 
       case "Exit":
-        exit();
+        await exit();
         break;
     }
-  });
+  }
 }
 
-// 4 functions (view, add, update, delete) leading to sub-functions (employee, role, manager, department)
+// 4 functions (view, add, update, delete)-
+// -leading to sub-functions (employee, role, manager, department)
+
+async function add() {
+  let answer = await inquirer.prompt({
+    type: "list",
+    name: "Add",
+    message: "What would you like to add?",
+    choices: ["Employee", "Role", "Department"],
+  });
+  switch (answer.Add) {
+    case "Employee":
+      await addEmployee();
+      break;
+
+    case "Role":
+      await addRole();
+      break;
+
+    case "Department":
+      await addDepartment();
+      break;
+  }
+}
+
+function remove() {
+  inquirer
+    .prompt({
+      type: "list",
+      name: "Remove",
+      message: "What would you like to Delete?",
+      choices: ["Employee", "Role", "Department"],
+    })
+    .then((answer) => {
+      switch (answer.Remove) {
+        case "Employee":
+          removeEmployee();
+          break;
+
+        case "Role":
+          removeRole();
+          break;
+
+        case "Department":
+          removeDepartment();
+          break;
+      }
+    });
+}
+
+function update() {
+  inquirer
+    .prompt({
+      type: "list",
+      name: "Update",
+      message: "What would you like to Update?",
+      choices: ["Employee Role", "Employee Manager"],
+    })
+    .then((answer) => {
+      switch (answer.Update) {
+        case "Employee":
+          updateEmployeeRole();
+          break;
+
+        case "Role":
+          updateEmployeeManager();
+          break;
+      }
+    });
+}
+
+function view() {
+  inquirer
+    .prompt({
+      type: "list",
+      name: "View",
+      message: "What do you wish to view?",
+      choices: [
+        "All Employees",
+        "All Employees by Department",
+        "All Employees by Manager",
+        "All Departments",
+        "All Roles",
+      ],
+    })
+    .then((answer) => {
+      switch (answer.View) {
+        case "All Employees":
+          viewAllEmployees();
+          break;
+        case "All Employees by Department":
+          viewEmplByDept();
+          break;
+        case "All Employees by Manager":
+          viewEmplByMgr();
+          break;
+        case "All Departments":
+          viewAllDepartments();
+          break;
+        case "All Roles":
+          viewAllRoles();
+          break;
+      }
+    });
+}
+
+async function addEmployee() {
+  let answer = await inquirer.prompt([
+    {
+      type: "input",
+      name: "firstName",
+      message: "Employees first name:",
+    },
+    {
+      type: "input",
+      name: "lastName",
+      message: "Employees last name:",
+    },
+    {
+      type: "list",
+      name: "roleID",
+      message: "Employee role ID:",
+      choices: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+    },
+    {
+      type: "list",
+      name: "managerID",
+      message: "Employees manager ID:",
+      choices: ["1", "2", "3"],
+    },
+  ]);
+
+  const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?);`;
+  connection.query(
+    query,
+    [answer.firstName, answer.lastName, answer.roleID, answer.managerID],
+    (err, res) => {
+      if (err) throw err;
+      console.log("");
+      console.table(res);
+      console.log("Employee added succesfully.");
+    }
+  );
+}
+
+runApp();
