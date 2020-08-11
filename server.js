@@ -198,4 +198,42 @@ async function addEmployee() {
   );
 }
 
+async function addRole() {
+  let answer = await inquirer.prompt([
+    {
+      type: "number",
+      name: "roleID",
+      message: "What is the ID of the new role? (Numbers 1-9 already in use): ",
+    },
+    {
+      type: "input",
+      name: "roleTitle",
+      message: "What is the title of the new role: ",
+    },
+    {
+      type: "input",
+      name: "salary",
+      message: "What is the salary of the new role: ",
+    },
+    {
+      type: "number",
+      name: "departmentID",
+      message:
+        "Which department is this role in? (1 = Sales, 2 = Engineering, 3 = Accounting): ",
+    },
+  ]);
+
+  const query = `INSERT INTO roles (id, title, salary, dept_id) VALUES (?,?,?,?);`;
+  connection.query(
+    query,
+    [answer.roleID, answer.roleTitle, answer.salary, answer.departmentID],
+    (err, res) => {
+      if (err) throw err;
+      console.log("");
+      console.table(res);
+      console.log("Role added succesfully.");
+    }
+  );
+}
+
 runApp();
