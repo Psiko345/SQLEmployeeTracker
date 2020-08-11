@@ -384,7 +384,7 @@ async function viewAllRoles() {
     name AS department 
   FROM roles 
   INNER JOIN departments ON (roles.department_id = departments.id)`;
-  await connection.query(query, (err, res) => {
+  connection.query(query, (err, res) => {
     if (err) throw err;
     console.log("");
     console.table(res);
