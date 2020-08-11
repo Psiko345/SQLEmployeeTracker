@@ -123,23 +123,11 @@ async function view() {
     type: "list",
     name: "View",
     message: "What do you wish to view?",
-    choices: [
-      "All Employees",
-      "All Employees by Department",
-      "All Employees by Manager",
-      "All Departments",
-      "All Roles",
-    ],
+    choices: ["All Employees", "All Departments", "All Roles"],
   });
   switch (answer.View) {
     case "All Employees":
       await viewAllEmployees();
-      break;
-    case "All Employees by Department":
-      await viewEmplByDept();
-      break;
-    case "All Employees by Manager":
-      await viewEmplByMgr();
       break;
     case "All Departments":
       await viewAllDepartments();
