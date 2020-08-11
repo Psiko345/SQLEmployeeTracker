@@ -180,7 +180,8 @@ async function addEmployee() {
     {
       type: "list",
       name: "managerID",
-      message: "Employees manager ID:",
+      message:
+        "Employees manager ID (1 = Sales, 2 = Engineering, 3 = Accounting):",
       choices: ["1", "2", "3"],
     },
   ]);
@@ -234,6 +235,80 @@ async function addRole() {
       console.log("Role added succesfully.");
     }
   );
+}
+
+async function addDepartment() {
+  let answer = await inquirer.prompt([
+    {
+      type: "number",
+      name: "departmentID",
+      message: "New department ID (1=Sales, 2=Engineering, 3=Accounting): ",
+    },
+    {
+      type: "input",
+      name: "name",
+      message: "New department name: ",
+    },
+  ]);
+
+  const query = `INSERT INTO departments (id, name) VALUES (?,?);`;
+  connection.query(query, [answer.departmentID, answer.name], (err, res) => {
+    if (err) throw err;
+    console.log("");
+    console.table(res);
+    console.log("Department added succesfully.");
+  });
+}
+
+async function removeEmployee() {
+  let answer = await inquirer.prompt([
+    {
+      type: "input",
+      name: "employeeID",
+      message: "ID of the Employee you want to delete: ",
+    },
+  ]);
+
+  const query = `DELETE FROM employees WHERE id = ?`;
+  connection.query(query, [answer.employeeID], (err, res) => {
+    if (err) throw err;
+    console.log("");
+    console.log("Employee succesfully deleted.");
+  });
+}
+
+async function removeRole() {
+  let answer = await inquirer.prompt([
+    {
+      type: "input",
+      name: "roleID",
+      message: "ID of the Role you want to delete: ",
+    },
+  ]);
+
+  const query = `DELETE FROM roles WHERE id = ?`;
+  connection.query(query, [answer.roleID], (err, res) => {
+    if (err) throw err;
+    console.log("");
+    console.log("Role succesfully deleted.");
+  });
+}
+
+async function removeDepartment() {
+  let answer = await inquirer.prompt([
+    {
+      type: "input",
+      name: "deptID",
+      message: "ID of the Department you want to delete: ",
+    },
+  ]);
+
+  const query = `DELETE FROM departments WHERE id = ?`;
+  connection.query(query, [answer.deptID], (err, res) => {
+    if (err) throw err;
+    console.log("");
+    console.log("Department succesfully deleted.");
+  });
 }
 
 runApp();
