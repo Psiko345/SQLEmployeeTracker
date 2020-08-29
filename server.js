@@ -13,10 +13,10 @@ const connection = mysql.createConnection({
   database: "company_db",
 });
 
-// connection.connect(function (err) {
-//   if (err) throw err;
-//   runApp();
-// });
+connection.connect(function (err) {
+  if (err) throw err;
+  runApp();
+});
 
 async function runApp() {
   console.log("connecting to db...");
